@@ -2,7 +2,7 @@
 #include <fstream>
 #include <vector>
 #include <thread>
-#include <semaphore>
+#include <semaphore.h>
 #include <chrono>
 #include <random>
 #include "productor.h"
