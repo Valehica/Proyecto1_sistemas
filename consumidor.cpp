@@ -7,5 +7,5 @@
 Consumidor::Consumidor(int id, int ncc) : id(id), ncc(ncc) {}
 
 void Consumidor::consumir() {
-    //Implementar despues
+    
 }

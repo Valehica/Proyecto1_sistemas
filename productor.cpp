@@ -5,11 +5,11 @@
 #include <iostream>
 
 // Variables externas que manejan el buffer y los semáforos
-extern std::vector<std::string> buffer; // El buffer circular
-extern sem_t empty, full, mutex;        // Semáforos para controlar concurrencia
-extern int in;                          // Índice de escritura (para FIFO)
-extern int bufferSize;                  // Tamaño del buffer
-extern std::ofstream registroProductor; // Archivo de registro para los productores
+extern std::vector<std::string> buffer; 
+extern sem_t empty, full, mutex;        
+extern int in;                          
+extern int bufferSize;                  
+extern std::ofstream registroProductor;
 
 // Constructor de la clase Productor
 Productor::Productor(int id, int npp) : id(id), npp(npp) {}
@@ -19,10 +19,8 @@ void Productor::producir() {
         sem_wait(&empty);
         sem_wait(&mutex);
 
-        // Producir el ítem (en este caso, un número basado en el ID del productor y el índice)
         int item = id * 100 + i;
 
-        // Escribir en el buffer de manera circular en la posición 'in'
         buffer[in] = std::to_string(item);  
         in = (in + 1) % bufferSize;         
 
