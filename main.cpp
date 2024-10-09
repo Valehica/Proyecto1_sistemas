@@ -17,6 +17,8 @@ sem_t empty, full, mutex;
     mutex: controlador del semaforo   
 */
 std::vector<std::string> buffer;
+int in = 0;   // Índice para escribir (puntero de escritura)
+int out = 0;  // Índice para leer (puntero de lectura)
 
 int bufferSize = 0;
 
@@ -32,7 +34,7 @@ void close_semaphores() {
     sem_destroy(&mutex);
 }
 
-int main(int argc, char* argv[]) {
+int main(int argc, char* argv[]) {  
     if (argc != 6) {
         std::cerr << "Número incorrecto de argumentos. Se esperan 5 argumentos.\n";
         return 1;
