@@ -57,7 +57,7 @@ int main(int argc, char* argv[]) {
     std::vector<std::thread> productores, consumidores;
 
     for (int i = 1; i <= NP; ++i) {
-        productores.emplace_back([i, NPP]() { Productor(i, NPP); });
+        productores.emplace_back([i, NPP]() { Productor(i, NPP).producir(); });
         registroProductor << "Productor " << i << " creado\n"; // lo crea en el archivo txt
     }
 
