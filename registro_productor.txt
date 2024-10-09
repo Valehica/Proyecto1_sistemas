@@ -1,2 +1,10 @@
 Productor 1 creado
-Productor 2 creado
+Productor 1 produjo: 100
+Productor 1 produjo: 101
+Productor 1 produjo: 102
+Productor 2 produjo: 200
+Productor 2 produjo: 201
+Productor 2 produjo: 202
+Productor 3 produjo: 300
+Productor 3 produjo: 301
+Productor 3 produjo: 302
