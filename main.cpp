@@ -39,9 +39,21 @@ int main(int argc, char* argv[]) {
 
     int NP = std::stoi(argv[1]);  // Número de productores
     int NC = std::stoi(argv[2]);  // Número de consumidores
-    bufferSize = std::stoi(argv[3]);  // Tamaño del buffer
+    int bufferSize = std::stoi(argv[3]);  // Tamaño del buffer
     int NPP = std::stoi(argv[4]);  // Número de producciones por productor
     int NCC = std::stoi(argv[5]);  // Número de consumos por consumidor
+
+    if(bufferSize < (NP + NC) + (NPP + NCC )){
+
+        std::cout << "el Buffer propuesto no es lo suficientemente grande para todo los procesos\n";
+        return 1;
+
+    }
+        
+   
+
+
+
 
     buffer.resize(bufferSize);
 
@@ -76,4 +88,7 @@ int main(int argc, char* argv[]) {
     close_semaphores();
 
     return 0;
+
+
+    
 }
