@@ -16,13 +16,8 @@ sem_t empty, full, mutex;
     Full: elementos llenos del buffer
     mutex: controlador del semaforo   
 */
+std::vector<std::string> buffer;
 
-// Crear memoria compartida para el buffer
-void* create_shared_memory(size_t size) {
-    int shm_fd = shm_open("/buffer", O_CREAT | O_RDWR, 0666);  // Crear un objeto de memoria compartida
-    ftruncate(shm_fd, size);  // Asignar el tamaño de la memoria compartida
-    return mmap(0, size, PROT_READ | PROT_WRITE, MAP_SHARED, shm_fd, 0);  // Mapear la memoria compartida
-}
 int bufferSize = 0;
 
 void init_semaphores(int size) {
@@ -49,8 +44,7 @@ int main(int argc, char* argv[]) {
     int NPP = std::stoi(argv[4]);  // Número de producciones por productor
     int NCC = std::stoi(argv[5]);  // Número de consumos por consumidor
 
-    size_t shared_memory_size = bufferSize * sizeof(std::string);
-    buffer = static_cast<std::string*>(create_shared_memory(shared_memory_size));
+    buffer.resize(bufferSize);
 
     // Inicialización de semáforos
     init_semaphores(bufferSize);
@@ -81,10 +75,6 @@ int main(int argc, char* argv[]) {
     registroProductor.close();
     registroConsumidor.close();
     close_semaphores();
-
-        // Liberar memoria compartida
-    munmap(buffer, shared_memory_size);
-    shm_unlink("/buffer");
 
     return 0;
 }
