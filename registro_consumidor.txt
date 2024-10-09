@@ -1,0 +1,18 @@
+Consumidor 1 creado
+Consumidor 1 intentando eliminar el elemento del buffer
+Consumidor 1 eliminó con éxito el elemento: 1_1
+Consumidor 2 creado
+Consumidor 2 intentando eliminar el elemento del buffer
+Consumidor 2 eliminó con éxito el elemento: 2_1
+Consumidor 1 intentando eliminar el elemento del buffer
+Consumidor 1 eliminó con éxito el elemento: 3_1
+Consumidor 1 intentando eliminar el elemento del buffer
+Consumidor 1 eliminó con éxito el elemento: 2_2
+Consumidor 2 intentando eliminar el elemento del buffer
+Consumidor 2 eliminó con éxito el elemento: 3_2
+Consumidor 1 intentando eliminar el elemento del buffer
+Consumidor 1 eliminó con éxito el elemento: 1_2
+Consumidor 2 intentando eliminar el elemento del buffer
+Consumidor 2 eliminó con éxito el elemento: 2_3
+Consumidor 2 intentando eliminar el elemento del buffer
+Consumidor 2 eliminó con éxito el elemento: 3_3

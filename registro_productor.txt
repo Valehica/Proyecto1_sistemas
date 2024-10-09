@@ -1,15 +1,21 @@
-Productor 3 finalizó
-Productor 1 finalizó
-Productor 2 finalizó
-Productor 2 finalizó
-Productor 1 finalizó
-Productor 3 finalizó
-Productor 2 finalizó
-Productor 3 finalizó
-Productor 1 finalizó
-Productor 3 finalizó
-Productor 1 finalizó
-Productor 2 finalizó
-Productor 3 finalizó
-Productor 2 finalizó
-Productor 1 finalizó
+Productor 1 creado
+Productor 1 Generó 1_1
+Productor 1 1_1 Inserción exitosa
+Productor 2 creado
+Productor 2 Generó 2_1
+Productor 2 2_1 Inserción exitosa
+Productor 3 creado
+Productor 3 Generó 3_1
+Productor 3 3_1 Inserción exitosa
+Productor 2 Generó 2_2
+Productor 2 2_2 Inserción exitosa
+Productor 3 Generó 3_2
+Productor 3 3_2 Inserción exitosa
+Productor 1 Generó 1_2
+Productor 1 1_2 Inserción exitosa
+Productor 2 Generó 2_3
+Productor 2 2_3 Inserción exitosa
+Productor 3 Generó 3_3
+Productor 3 3_3 Inserción exitosa
+Productor 1 Generó 1_3
+Productor 1 1_3 Inserción exitosa

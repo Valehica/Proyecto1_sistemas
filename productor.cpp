@@ -20,23 +20,19 @@ void Productor::producir() {
         
         // Registrar que el ítem fue generado
         registroProductor << "Productor " << id << " Generó " << item << std::endl;
-        std::cout << "Productor " << id << " ha generado el ítem: " << item << std::endl;
-
+        
         bool insertado = false;
         while (!insertado) {
             // Intentar insertar en el buffer
             if (sem_trywait(&empty) == 0) { // No se bloquea si no hay espacio
-                std::cout << "Productor " << id << " intentará insertar el ítem: " << item << std::endl;
-
                 sem_wait(&mutex);  // Exclusión mutua para acceder al buffer
 
                 // Inserción exitosa
                 buffer[in] = item;
                 in = (in + 1) % buffer.size();
-                
+
                 // Registrar inserción exitosa
                 registroProductor << "Productor " << id << " " << item << " Inserción exitosa" << std::endl;
-                std::cout << "Productor " << id << " insertó el ítem: " << item << " exitosamente en el buffer." << std::endl;
 
                 // Liberar los semáforos
                 sem_post(&mutex);
@@ -50,19 +46,16 @@ void Productor::producir() {
                 std::mt19937 gen(rd());
                 std::uniform_int_distribution<> dist(0, 5000); 
                 int sleepTime = dist(gen);
-                std::cout << "Productor " << id << " dormirá por " << sleepTime << " milisegundos tras la inserción.\n";
                 std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime));
             } else {
                 // Buffer lleno, no pudo insertar
                 registroProductor << "Productor " << id << " " << item << " Buffer lleno - Error de inserción" << std::endl;
-                std::cout << "Productor " << id << " no pudo insertar el ítem: " << item << " porque el buffer está lleno.\n";
 
                 // Dormir un tiempo aleatorio entre 0 y 4 segundos antes de reintentar
                 std::random_device rd;
                 std::mt19937 gen(rd());
                 std::uniform_int_distribution<> dist(0, 4000);
                 int sleepTime = dist(gen);
-                std::cout << "Productor " << id << " dormirá por " << sleepTime << " milisegundos antes de reintentar.\n";
                 std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime));
             }
         }

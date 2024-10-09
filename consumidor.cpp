@@ -17,7 +17,6 @@ void Consumidor::consumir() {
     for (int i = 0; i < ncc; i++) {
         // Registrar intento de consumir
         registroConsumidor << "Consumidor " << id << " intentando eliminar el elemento del buffer\n";
-        std::cout << "Consumidor " << id << " intentando consumir un ítem del buffer...\n";
         
         // Esperar a que haya un elemento disponible en el buffer
         sem_wait(&full);  // Se bloquea si no hay elementos en el buffer
@@ -29,21 +28,17 @@ void Consumidor::consumir() {
 
         // Registrar éxito de la eliminación
         registroConsumidor << "Consumidor " << id << " eliminó con éxito el elemento: " << item << std::endl;
-        std::cout << "Consumidor " << id << " consumió el ítem: " << item << " del buffer.\n";
 
         // Liberar semáforos
         sem_post(&mutex);  // Liberar la exclusión mutua
         sem_post(&empty);  // Incrementar el conteo de espacios vacíos en el buffer
 
         // Generar un período de espera aleatorio entre 0 y 5 segundos
-        std::random_device rd;  // Semilla para el generador aleatorio
+        std::random_device rd; // Semilla para el generador aleatorio
         std::mt19937 gen(rd()); // Motor de números aleatorios
         std::uniform_int_distribution<> dist(0, 5000); // Distribución entre 0 y 5000 ms
         int sleepTime = dist(gen);
 
-        // Informar cuánto tiempo dormirá el consumidor
-        std::cout << "Consumidor " << id << " dormirá por " << sleepTime << " milisegundos tras consumir.\n";
-        
         // Dormir por el tiempo aleatorio generado
         std::this_thread::sleep_for(std::chrono::milliseconds(sleepTime));
     }

@@ -1,29 +1,31 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <thread>
 #include <semaphore.h>
-#include <sys/wait.h>
-#include <unistd.h>
+#include <chrono>
+#include <random>
 #include "productor.h"
 #include "consumidor.h"
 
-std::ofstream registroProductor; // Archivo para los registros del productor
-std::ofstream registroConsumidor; // Archivo para los registros del consumidor
+std::ofstream registroProductor; //txt
+std::ofstream registroConsumidor; //txt
 sem_t empty, full, mutex; 
 /*
-    Empty: espacios vacíos en el buffer
-    Full: elementos llenos en el buffer
-    Mutex: semáforo para garantizar la exclusión mutua
+    Empty: elementros vacios de buffer 
+    Full: elementos llenos del buffer
+    mutex: controlador del semaforo   
 */
-std::vector<std::string> buffer;  // Buffer compartido
+std::vector<std::string> buffer;
 int in = 0;   // Índice para escribir (puntero de escritura)
 int out = 0;  // Índice para leer (puntero de lectura)
-int bufferSize = 0;  // Tamaño del buffer
+
+int bufferSize = 0;
 
 void init_semaphores(int size) {
-    sem_init(&empty, 0, size);  // Espacios vacíos iniciales en el buffer
-    sem_init(&full, 0, 0);      // No hay elementos llenos inicialmente
-    sem_init(&mutex, 0, 1);     // Exclusión mutua habilitada inicialmente
+    sem_init(&empty, 0, size);  
+    sem_init(&full, 0, 0);      
+    sem_init(&mutex, 0, 1);     
 }
 
 void close_semaphores() {
@@ -40,57 +42,52 @@ int main(int argc, char* argv[]) {
 
     int NP = std::stoi(argv[1]);  // Número de productores
     int NC = std::stoi(argv[2]);  // Número de consumidores
-    bufferSize = std::stoi(argv[3]);  // Tamaño del buffer
+    int bufferSize = std::stoi(argv[3]);  // Tamaño del buffer
     int NPP = std::stoi(argv[4]);  // Número de producciones por productor
     int NCC = std::stoi(argv[5]);  // Número de consumos por consumidor
 
-    if (bufferSize < 1) {
-        std::cout << "El tamaño del buffer debe ser mayor a 0.\n";
+    if(bufferSize < (NP + NC) + (NPP + NCC )){
+
+        std::cout << "el Buffer propuesto no es lo suficientemente grande para todo los procesos\n";
         return 1;
+
     }
 
-    buffer.resize(bufferSize);  // Ajustar el tamaño del buffer
+    buffer.resize(bufferSize);
 
     // Inicialización de semáforos
     init_semaphores(bufferSize);
     
-    // Crear procesos para productores y consumidores
+
+    // Abrir los archivos de registro
+    registroProductor.open("registro_productor.txt");
+    registroConsumidor.open("registro_consumidor.txt");
+
+    // Crear productores y consumidores
+    std::vector<std::thread> productores, consumidores;
+
     for (int i = 1; i <= NP; ++i) {
-        pid_t pid = fork();  // Crear proceso hijo
-        if (pid == 0) {  // Proceso hijo
-            std::ofstream registroProductorLocal("registro_productor.txt", std::ios_base::app); // Abrir en modo 'append'
-            Productor(i, NPP).producir();
-            registroProductorLocal << "Productor " << i << " finalizó\n";
-            registroProductorLocal.close();
-            _exit(0);  // Terminar proceso hijo
-        } else if (pid < 0) {
-            std::cerr << "Error al crear proceso para Productor " << i << std::endl;
-            return 1;
-        }
+        productores.emplace_back([i, NPP]() { Productor(i, NPP).producir(); });
+        registroProductor << "Productor " << i << " creado\n"; // lo crea en el archivo txt
+
     }
 
     for (int i = 1; i <= NC; ++i) {
-        pid_t pid = fork();  // Crear proceso hijo
-        if (pid == 0) {  // Proceso hijo
-            std::ofstream registroConsumidorLocal("registro_consumidor.txt", std::ios_base::app); // Abrir en modo 'append'
-            Consumidor(i, NCC).consumir();
-            registroConsumidorLocal << "Consumidor " << i << " finalizó\n";
-            registroConsumidorLocal.close();
-            _exit(0);  // Terminar proceso hijo
-        } else if (pid < 0) {
-            std::cerr << "Error al crear proceso para Consumidor " << i << std::endl;
-            return 1;
-        }
+        consumidores.emplace_back([i, NCC]() { Consumidor(i, NCC).consumir(); });
+        registroConsumidor << "Consumidor " << i << " creado\n"; // lo crea en el archivo txt
     }
 
-    // Esperar a que todos los procesos hijos terminen
-    for (int i = 0; i < NP + NC; ++i) {
-        int status;
-        wait(&status);  // Esperar la terminación de cada proceso hijo
-    }
+    // Esperar que todos terminen
+    for (auto& productor : productores) productor.join();
+    for (auto& consumidor : consumidores) consumidor.join();
 
-    // Cerrar semáforos
+    // Cerrar archivos y semáforos
+    registroProductor.close();
+    registroConsumidor.close();
     close_semaphores();
 
     return 0;
+
+
+    
 }
